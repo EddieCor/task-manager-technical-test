@@ -1,0 +1,37 @@
+#root {
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+  padding: 48px 24px;
+  background: #f4f7fb;
+  color: #1f2937;
+}
+
+.app-header {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #2563eb;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.25rem, 6vw, 4rem);
+  line-height: 1;
+}
+
+.subtitle {
+  max-width: 680px;
+  margin: 16px 0 0;
+  font-size: 1.1rem;
+  color: #4b5563;
+}
