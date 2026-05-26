@@ -34,9 +34,26 @@ export type CreateTaskPayload = {
   description?: string;
 };
 
+export type UpdateTaskPayload = {
+  title?: string;
+  description?: string;
+  status?: "NEW" | "STARTED" | "COMPLETED";
+  assignedPersonId?: number | null;
+};
+
 export async function createTask(payload: CreateTaskPayload): Promise<Task> {
   return request<Task>("/tasks", {
     method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function updateTask(
+  taskId: number,
+  payload: UpdateTaskPayload
+): Promise<Task> {
+  return request<Task>(`/tasks/${taskId}`, {
+    method: "PUT",
     body: JSON.stringify(payload),
   });
 }

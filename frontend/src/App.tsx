@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { createTask, getPeople, getTasks } from "./services/api";
+import { createTask, getPeople, getTasks, updateTask } from "./services/api";
 import type { Person } from "./types/person";
 import type { Task } from "./types/task";
 
@@ -62,6 +62,28 @@ function App() {
       setError(message);
     } finally {
       setIsSubmitting(false);
+    }
+  }
+
+  async function handleAssignPerson(taskId: number, value: string) {
+    setError(null);
+
+    const assignedPersonId = value === "" ? null : Number(value);
+
+    try {
+      const updatedTask = await updateTask(taskId, {
+        assignedPersonId,
+      });
+
+      setTasks((currentTasks) =>
+        currentTasks.map((task) =>
+          task.id === updatedTask.id ? updatedTask : task
+        )
+      );
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Error assigning person.";
+      setError(message);
     }
   }
 
@@ -143,15 +165,20 @@ function App() {
                         <h3>{task.title}</h3>
                         {task.description && <p>{task.description}</p>}
                       </div>
-
-                      <p className="task-assignee">
-                        Assigned to:{" "}
-                        <strong>
-                          {task.assignedPerson
-                            ? task.assignedPerson.name
-                            : "Unassigned"}
-                        </strong>
-                      </p>
+                      <label className="task-assignee">
+                        Assigned to
+                        <select
+                          value={task.assignedPersonId ?? ""}
+                          onChange={(event) => handleAssignPerson(task.id, event.target.value)}
+                        >
+                          <option value="">Unassigned</option>
+                          {people.map((person) => (
+                            <option key={person.id} value={person.id}>
+                              {person.name} — {person.role}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
                     </article>
                   ))}
                 </div>
