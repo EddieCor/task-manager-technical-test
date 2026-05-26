@@ -1,6 +1,37 @@
+import { useEffect, useState } from "react";
 import "./App.css";
+import { getPeople, getTasks } from "./services/api";
+import type { Person } from "./types/person";
+import type { Task } from "./types/task";
 
 function App() {
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [people, setPeople] = useState<Person[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [tasksData, peopleData] = await Promise.all([
+          getTasks(),
+          getPeople(),
+        ]);
+
+        setTasks(tasksData);
+        setPeople(peopleData);
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Error loading data.";
+        setError(message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadData();
+  }, []);
+
   return (
     <main className="app">
       <section className="app-header">
@@ -9,6 +40,57 @@ function App() {
         <p className="subtitle">
           A simple To-Do List application for creating, assigning, updating, and deleting tasks.
         </p>
+      </section>
+
+      <section className="dashboard">
+        {error && <p className="error-message">{error}</p>}
+
+        {isLoading ? (
+          <p className="empty-state">Loading tasks...</p>
+        ) : (
+          <>
+            <div className="summary-grid">
+              <article className="summary-card">
+                <span>Tasks</span>
+                <strong>{tasks.length}</strong>
+              </article>
+
+              <article className="summary-card">
+                <span>People</span>
+                <strong>{people.length}</strong>
+              </article>
+            </div>
+
+            <section className="task-section">
+              <h2>Tasks</h2>
+
+              {tasks.length === 0 ? (
+                <p className="empty-state">No tasks have been created yet.</p>
+              ) : (
+                <div className="task-list">
+                  {tasks.map((task) => (
+                    <article className="task-card" key={task.id}>
+                      <div>
+                        <p className="task-status">{task.status}</p>
+                        <h3>{task.title}</h3>
+                        {task.description && <p>{task.description}</p>}
+                      </div>
+
+                      <p className="task-assignee">
+                        Assigned to:{" "}
+                        <strong>
+                          {task.assignedPerson
+                            ? task.assignedPerson.name
+                            : "Unassigned"}
+                        </strong>
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
+          </>
+        )}
       </section>
     </main>
   );

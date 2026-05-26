@@ -9,7 +9,8 @@
   color: #1f2937;
 }
 
-.app-header {
+.app-header,
+.dashboard {
   max-width: 960px;
   margin: 0 auto;
 }
@@ -34,4 +35,86 @@ h1 {
   margin: 16px 0 0;
   font-size: 1.1rem;
   color: #4b5563;
+}
+
+.dashboard {
+  margin-top: 40px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.summary-card,
+.task-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.summary-card {
+  padding: 20px;
+}
+
+.summary-card span {
+  display: block;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.summary-card strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 2rem;
+}
+
+.task-section h2 {
+  margin: 0 0 16px;
+}
+
+.task-list {
+  display: grid;
+  gap: 16px;
+}
+
+.task-card {
+  padding: 20px;
+}
+
+.task-card h3 {
+  margin: 4px 0 8px;
+}
+
+.task-card p {
+  margin: 0;
+  color: #4b5563;
+}
+
+.task-status {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #2563eb;
+  letter-spacing: 0.08em;
+}
+
+.task-assignee {
+  margin-top: 16px !important;
+}
+
+.empty-state,
+.error-message {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+}
+
+.error-message {
+  color: #b91c1c;
+  border-color: #fecaca;
+  background: #fff1f2;
 }
