@@ -1,3 +1,5 @@
+/* Base layout */
+
 #root {
   min-height: 100vh;
 }
@@ -14,6 +16,8 @@
   max-width: 960px;
   margin: 0 auto;
 }
+
+/* Header */
 
 .eyebrow {
   margin: 0 0 8px;
@@ -37,6 +41,8 @@ h1 {
   color: #4b5563;
 }
 
+/* Dashboard and summary */
+
 .dashboard {
   margin-top: 40px;
 }
@@ -49,7 +55,10 @@ h1 {
 }
 
 .summary-card,
-.task-card {
+.task-form,
+.task-card,
+.empty-state,
+.error-message {
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 16px;
@@ -72,60 +81,11 @@ h1 {
   font-size: 2rem;
 }
 
-.task-section h2 {
-  margin: 0 0 16px;
-}
-
-.task-list {
-  display: grid;
-  gap: 16px;
-}
-
-.task-card {
-  padding: 20px;
-}
-
-.task-card h3 {
-  margin: 4px 0 8px;
-}
-
-.task-card p {
-  margin: 0;
-  color: #4b5563;
-}
-
-.task-status {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #2563eb;
-  letter-spacing: 0.08em;
-}
-
-.task-assignee {
-  margin-top: 16px;
-}
-
-.empty-state,
-.error-message {
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
-  border: 1px solid #e5e7eb;
-}
-
-.error-message {
-  color: #b91c1c;
-  border-color: #fecaca;
-  background: #fff1f2;
-}
+/* Form */
 
 .task-form {
   margin-bottom: 32px;
   padding: 24px;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
 
 .form-header h2 {
@@ -163,6 +123,8 @@ textarea {
   resize: vertical;
 }
 
+/* Buttons */
+
 button {
   border: none;
   border-radius: 10px;
@@ -172,18 +134,16 @@ button {
   font: inherit;
   font-weight: 700;
   cursor: pointer;
+  transition: transform 0.12s ease, opacity 0.12s ease, background 0.12s ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
 }
 
 button:disabled {
   cursor: not-allowed;
   opacity: 0.65;
-}
-
-.task-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 16px;
 }
 
 .secondary-button {
@@ -194,4 +154,142 @@ button:disabled {
 .danger-button {
   background: #dc2626;
   color: white;
+}
+
+/* Tasks */
+
+.task-section h2 {
+  margin: 0 0 16px;
+}
+
+.task-list {
+  display: grid;
+  gap: 16px;
+}
+
+.task-card {
+  position: relative;
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.1);
+}
+
+.task-card--new {
+  border-left: 6px solid #2563eb;
+}
+
+.task-card--started {
+  border-left: 6px solid #f59e0b;
+}
+
+.task-card--completed {
+  border-left: 6px solid #16a34a;
+  background: #f0fdf4;
+}
+
+.task-card--completed h3 {
+  text-decoration: line-through;
+  color: #15803d;
+}
+
+.task-card p {
+  margin: 0;
+  color: #4b5563;
+}
+
+.task-content h3 {
+  margin: 6px 0 8px;
+  font-size: 1.25rem;
+}
+
+.task-description {
+  margin-top: 8px;
+}
+
+.task-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.task-status {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.task-card--started .task-status {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.task-card--completed .task-status {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.task-meta span {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+
+.task-assignee {
+  margin-top: 16px;
+  padding-top: 4px;
+}
+
+.task-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* Messages */
+
+.empty-state,
+.error-message {
+  padding: 16px;
+}
+
+.error-message {
+  color: #b91c1c;
+  border-color: #fecaca;
+  background: #fff1f2;
+}
+
+/* Responsive */
+
+@media (min-width: 760px) {
+  .task-card {
+    grid-template-columns: 1fr 280px;
+    align-items: start;
+  }
+
+  .task-actions {
+    grid-column: 1 / -1;
+  }
 }

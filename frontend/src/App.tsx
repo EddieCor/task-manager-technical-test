@@ -212,11 +212,32 @@ function App() {
               ) : (
                 <div className="task-list">
                   {tasks.map((task) => (
-                    <article className="task-card" key={task.id}>
-                      <div>
-                        <p className="task-status">{task.status}</p>
+                    <article
+                      className={`task-card task-card--${task.status.toLowerCase()}`}
+                      key={task.id}
+                    >
+                      <div className="task-content">
+                        <div className="task-title-row">
+                          <p className="task-status">{task.status}</p>
+                        </div>
+
                         <h3>{task.title}</h3>
-                        {task.description && <p>{task.description}</p>}
+
+                        {task.description && (
+                          <p className="task-description">{task.description}</p>
+                        )}
+
+                        <div className="task-meta">
+                          <span>Created: {new Date(task.createdAt).toLocaleDateString()}</span>
+                          {task.startedAt && (
+                            <span>Started: {new Date(task.startedAt).toLocaleDateString()}</span>
+                          )}
+                          {task.completedAt && (
+                            <span>
+                              Completed: {new Date(task.completedAt).toLocaleDateString()}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <label className="task-assignee">
                         Assigned to
