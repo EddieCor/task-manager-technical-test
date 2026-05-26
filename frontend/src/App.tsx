@@ -87,6 +87,29 @@ function App() {
     }
   }
 
+  async function handleUpdateStatus(
+    taskId: number,
+    status: "NEW" | "STARTED" | "COMPLETED"
+  ) {
+    setError(null);
+
+    try {
+      const updatedTask = await updateTask(taskId, {
+        status,
+      });
+
+      setTasks((currentTasks) =>
+        currentTasks.map((task) =>
+          task.id === updatedTask.id ? updatedTask : task
+        )
+      );
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Error updating task status.";
+      setError(message);
+    }
+  }
+
   return (
     <main className="app">
       <section className="app-header">
@@ -179,6 +202,32 @@ function App() {
                           ))}
                         </select>
                       </label>
+                      <div className="task-actions">
+                        <button
+                          type="button"
+                          onClick={() => handleUpdateStatus(task.id, "STARTED")}
+                          disabled={task.status === "STARTED" || task.status === "COMPLETED"}
+                        >
+                          Start
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleUpdateStatus(task.id, "COMPLETED")}
+                          disabled={task.status === "COMPLETED"}
+                        >
+                          Complete
+                        </button>
+
+                        <button
+                          type="button"
+                          className="secondary-button"
+                          onClick={() => handleUpdateStatus(task.id, "NEW")}
+                          disabled={task.status === "NEW"}
+                        >
+                          Reset
+                        </button>
+                      </div>
                     </article>
                   ))}
                 </div>
