@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { createTask, getPeople, getTasks, updateTask } from "./services/api";
+import {
+  createTask,
+  deleteTask,
+  getPeople,
+  getTasks,
+  updateTask,
+} from "./services/api";
 import type { Person } from "./types/person";
 import type { Task } from "./types/task";
 
@@ -106,6 +112,30 @@ function App() {
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Error updating task status.";
+      setError(message);
+    }
+  }
+
+  async function handleDeleteTask(taskId: number) {
+    setError(null);
+
+    const shouldDelete = window.confirm(
+      "Are you sure you want to delete this task?"
+    );
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    try {
+      await deleteTask(taskId);
+
+      setTasks((currentTasks) =>
+        currentTasks.filter((task) => task.id !== taskId)
+      );
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Error deleting task.";
       setError(message);
     }
   }
@@ -226,6 +256,13 @@ function App() {
                           disabled={task.status === "NEW"}
                         >
                           Reset
+                        </button>
+                        <button
+                          type="button"
+                          className="danger-button"
+                          onClick={() => handleDeleteTask(task.id)}
+                        >
+                          Delete
                         </button>
                       </div>
                     </article>
