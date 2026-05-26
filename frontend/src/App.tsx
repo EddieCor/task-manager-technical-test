@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { getPeople, getTasks } from "./services/api";
+import { createTask, getPeople, getTasks } from "./services/api";
 import type { Person } from "./types/person";
 import type { Task } from "./types/task";
 
@@ -9,6 +9,9 @@ function App() {
   const [people, setPeople] = useState<Person[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -32,6 +35,36 @@ function App() {
     loadData();
   }, []);
 
+  async function handleCreateTask(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    setError(null);
+
+    if (title.trim() === "") {
+      setError("Title is required.");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      const newTask = await createTask({
+        title: title.trim(),
+        description: description.trim(),
+      });
+
+      setTasks((currentTasks) => [newTask, ...currentTasks]);
+      setTitle("");
+      setDescription("");
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Error creating task.";
+      setError(message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <main className="app">
       <section className="app-header">
@@ -44,6 +77,41 @@ function App() {
 
       <section className="dashboard">
         {error && <p className="error-message">{error}</p>}
+
+        <form className="task-form" onSubmit={handleCreateTask}>
+          <div className="form-header">
+            <div>
+              <h2>Create task</h2>
+              <p>Add a new task with the initial status NEW.</p>
+            </div>
+          </div>
+
+          <div className="form-grid">
+            <label>
+              Title
+              <input
+                type="text"
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                placeholder="e.g. Create homepage"
+              />
+            </label>
+
+            <label>
+              Description
+              <textarea
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+                placeholder="Optional task details"
+                rows={3}
+              />
+            </label>
+          </div>
+
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Creating..." : "Create task"}
+          </button>
+        </form>
 
         {isLoading ? (
           <p className="empty-state">Loading tasks...</p>

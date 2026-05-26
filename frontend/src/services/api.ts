@@ -28,3 +28,15 @@ export async function getTasks(): Promise<Task[]> {
 export async function getPeople(): Promise<Person[]> {
   return request<Person[]>("/people");
 }
+
+export type CreateTaskPayload = {
+  title: string;
+  description?: string;
+};
+
+export async function createTask(payload: CreateTaskPayload): Promise<Task> {
+  return request<Task>("/tasks", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
