@@ -82,12 +82,11 @@ Install dependencies:
 npm install
 ```
 
-````md
 Create a local environment file:
 
 ```bash
 copy .env.example .env
-````
+```
 
 On macOS/Linux:
 
