@@ -18,6 +18,11 @@ function App() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    const savedTheme = localStorage.getItem("theme");
+
+    return savedTheme === "dark" ? "dark" : "light";
+  });
 
   useEffect(() => {
     async function loadData() {
@@ -40,6 +45,11 @@ function App() {
 
     loadData();
   }, []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   async function handleCreateTask(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -140,10 +150,28 @@ function App() {
     }
   }
 
+  function toggleTheme() {
+    setTheme((currentTheme) =>
+      currentTheme === "light" ? "dark" : "light"
+    );
+  }
+
   return (
     <main className="app">
       <section className="app-header">
-        <p className="eyebrow">Technical Test</p>
+        <div className="header-top">
+          <p className="eyebrow">Technical Test</p>
+
+          <button
+            type="button"
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label="Toggle color theme"
+          >
+            {theme === "light" ? "Dark mode" : "Light mode"}
+          </button>
+        </div>
+
         <h1>Task Manager</h1>
         <p className="subtitle">
           A simple To-Do List application for creating, assigning, updating, and deleting tasks.
